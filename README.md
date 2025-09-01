@@ -1,135 +1,120 @@
-#  DevOpsLab: My Home IT Infrastructure Project
+# DevOpsLab: домашняя инфраструктура с нуля
 
-> *"Stay hungry. Stay foolish."*  
-> *"Простота  высшая форма изысканности."*
-
-This is my **hands-on DevOps journey**  building a scalable, automated, and documented IT environment from scratch.  
-No cloud credits. No magic. Just **real hardware, real problems, and real solutions**.
-
-I'm not just learning technologies  I'm building a **platform for my future**.
+> **"Технология должна работать для тебя, а не ты для неё."**  
+> Этот репозиторий — не хобби. Это **тренировочная площадка для DevOps-инженера**.  
+> Здесь всё: от физического распределения питания до автоматизации, мониторинга и управления инфраструктурой как кодом.
 
 ---
 
-##  What Is This?
+## 🎯 Цель
 
-`DevOpsLab` is my personal **home lab and DevOps training ground**, designed to:
-- Master Linux, networking, automation, and monitoring
-- Remotely manage servers and workstations
-- Prepare for real-world DevOps/SRE roles
-- Build a portfolio project that proves my skills
+Построить **полностью контролируемую, документированную и автоматизированную IT-среду**, которая:
+- Служит платформой для изучения Linux, сетей, виртуализации, безопасности и автоматизации.
+- Готовит к реальной работе: DevOps, SRE, системное администрирование.
+- Является **доказательством компетенций**, а не просто "сервер в шкафу".
 
->  **No Docker yet?** That's fine.  
-> This project starts with the **basics**  because real infrastructure is built layer by layer.
-
----
-
-##  Hardware Overview
-
-| Device               | Specs |
-|----------------------|-------|
-| **Main Server**      | Intel Xeon E5-2650 v2, 16GB DDR3, 256GB SSD, Ubuntu 22.04 |
-| **Gaming PC**        | i5-12600KF, RTX 3070, 32GB DDR5, Windows 10 |
-| **Secondary PC**     | Xeon E5-2650 v2, RX 580, 16GB DDR3, Windows 10 |
-| **Raspberry Pi 3B+** | Control terminal, script runner, SSH gateway |
-
-All devices are mounted in a **4U rack** with managed power (smart plugs), UPS-ready power distribution, and physical safety (RCD + circuit breaker).
+> **Это не про "включить ПК по Wi-Fi".**  
+> Это про **контроль, наблюдаемость, восстановление и масштабируемость**.
 
 ---
 
-##  Network & Access
+## 🖥️ Текущая конфигурация
 
-- **Switch**: HP 1810G-24 (managed, 24-port 1Gbps)
-- **Remote Access**: ZeroTier (private virtual network)
-- **Wake-on-LAN**: Full control over power state
-- **Planned**: VLANs, static IPs, QoS
+### Сервер (Ubuntu 22.04.5 LTS)
+- **Процессор**: Intel Xeon E5-2650 v2 (8 ядер / 16 потоков)
+- **Материнская плата**: Kllisre X79 (LGA2011)
+- **Оперативная память**: 4 × 4 ГБ DDR3 (всего 16 ГБ)
+- **Хранение**:
+  - SSD 256 ГБ SATA (система)
+  - HDD 2 × 1 ТБ (WD Purple) — данные и бэкапы
+- **Блок питания**: CHIFTEC A90 650W
+- **Видеокарта**: Asus N210 1GB
+- **Корпус**: 4U серверный
+- **Операционная система**: Ubuntu Server 22.04.5 LTS
+- **Назначение**: основной сервер, виртуализация (KVM), мониторинг, автоматизация, управление
+- **Подключение к сети**: LAN (напрямую к роутеру)
 
- **Security note**:  
-All sensitive data (passwords, API keys, private IPs) are kept **out of this repo**.  
-Configuration templates use placeholders like `<your_ip>`, `<your_token>`.
+### ПК номер один (Windows 10 Pro)
+- **Материнская плата**: MAXSUN MS-iCraft Z790 WIFI
+- **Процессор**: Intel Core i5-13600KF
+- **Оперативная память**: 2 × 16 ГБ DDR5 6000 МГц
+- **Видеокарта**: NVIDIA RTX 3070 8 ГБ (Colorful Vulcan)
+- **Системный диск**: Samsung 980 PRO 500 ГБ (NVMe)
+- **Диск для данных**: WD Blue 1 ТБ (SATA)
+- **Блок питания**: CHIFTEC A90 750W
+- **Охлаждение**: жидкостное (3-секционный радиатор)
+- **Назначение**: основное рабочее место, игры, тестирование
+- **Подключение к сети**: LAN (напрямую к роутеру)
 
----
+### ПК номер два (Windows 10 Pro)
+- **Процессор**: Intel Xeon E5-2650 v2 (8 ядер / 16 потоков)
+- **Материнская плата**: Kllisre X79 (LGA2011)
+- **Оперативная память**: 4 × 4 ГБ DDR3 (всего 16 ГБ)
+- **Хранение**: SSD 128 ГБ SATA (система)
+- **Блок питания**: CHIFTEC A90 750W
+- **Видеокарта**: AMD RX 580 8 ГБ
+- **Корпус**: 4U серверный (установлен в стойке)
+- **Назначение**: резервное рабочее место, доступ к инфраструктуре
+- **Подключение к сети**: через коммутатор HP 1810G-24
 
-##  Key Technologies & Skills
-
-| Area             | Tools & Skills |
-|------------------|--------------|
-| **Linux**        | Ubuntu Server, Bash, systemd, cron, ufw |
-| **Networking**   | ZeroTier, DHCP, DNS, static routing |
-| **Automation**   | Bash, Python, Ansible (in progress) |
-| **Monitoring**   | Zabbix (planned), Prometheus (future) |
-| **Virtualization** | KVM (setup guide in progress) |
-| **CI/CD**        | GitHub Actions (pipeline for scripts) |
-| **Git & Docs**   | Full documentation, MkDocs (planned) |
-
->  This project proves that you can **start DevOps without Kubernetes**.  
-> Focus on **foundations**: automation, observability, version control.
-
----
-
-
-##  Security & Privacy Policy
-
-This repository follows strict rules:
--  **No passwords, tokens, or private IPs**
--  **No Wi-Fi credentials or ZeroTier secrets**
--  **No personal data (names, emails, etc.)**
--  All configs use **placeholders**
--  Sensitive scripts are **templated or omitted**
--  `.gitignore` blocks logs, configs, and credentials
-
-> This is a **teaching and portfolio repo**, not a deployment one.
-
----
-
-##  Whats Next?
-
-### Phase 1: Foundations
-- [x] Ubuntu server setup
-- [x] ZeroTier network
-- [ ] HP switch configuration
-- [ ] WOL & smart plug automation
-
-### Phase 2: Virtualization & AD
-- [ ] Install KVM
-- [ ] Deploy Windows Server VM
-- [ ] Set up Active Directory, DNS, DHCP
-- [ ] Join machines to domain
-
-### Phase 3: Observability
-- [ ] Install Zabbix Server
-- [ ] Monitor host status, disk usage, uptime
-- [ ] Set up alerts
-
-### Phase 4: CI/CD & GitOps
-- [ ] GitHub Actions: run scripts on push
-- [ ] Test pipeline: "Is PC online?"
-- [ ] Future: Argo CD + k3s
+### Raspberry Pi 3B+
+- **Модель**: Raspberry Pi 3 Model B+
+- **Память**: microSD 16 ГБ
+- **Назначение**: терминал управления, запуск скриптов, SSH-доступ
+- **Поддерживаемые технологии**: Python, Bash, SSH
+- **Доступ**: через ZeroTier (внутренняя виртуальная сеть)
 
 ---
 
-##  Why This Matters
+## 🔧 Инфраструктура
 
-> *"DevOps is not a job title. It's a culture: automation, collaboration, and continuous improvement."*  
->  [roadmap.sh/devops](https://roadmap.sh/devops)
+### Стойка
+- **Количество корпусов**: 3 × 4U
+- **Полки**: 2 × 1U (для мелочи)
+- **Вентиляция**: 1U вентиляторный блок (шумный, пока отключён)
+- **Блок розеток**: 7 гнёзд (в стойке)
+- **Система защиты**:
+  - УЗО: ВД1-63 40 А
+  - Автоматический выключатель: 4500 Вт
+  - Заземление: выведено на общий контур
+- **Умные розетки**: 2 шт. (TP-Link HS100) — на сервере и ПК номер один
 
-On job interviews, Ill say:
-> "I built a full home IT platform  from power distribution to CI/CD.  
-> Its not perfect, but its **mine**.  
-> Every line of config, every script, every mistake taught me something.  
-> Im not just learning DevOps. Im **living it**."
+### Сеть
+- **Роутер**: провайдерский (ограниченный функционал)
+- **Интернет-канал**: 500 Мбит/с
+- **Коммутатор**: HP 1810G-24 (24 порта, 1 Гбит/с, управляемый)
+- **Виртуальная сеть**: ZeroTier — обеспечивает удалённый доступ ко всем устройствам
+- **Планируется**: VLAN, статические IP, QoS, резервирование
 
 ---
 
-##  Inspiration
-
-- Steve Jobs: *"Technology should work for you, not the other way around."*
-- Real DevOps engineers: *"Show projects, not just certificates."*
-- Myself: *"I dont want to be a student forever. I want to be an engineer."*
+## ✅ Что уже сделано
+- Физическая стойка собрана и защищена (УЗО, автомат, заземление)
+- Все ПК перенесены в стойку
+- Установлены: Ubuntu, Raspberry Pi, ZeroTier
+- Подключён и частично настроен HP 1810G-24
+- Настроены умные розетки (TP-Link HS100)
+- Работает частичный WOL
+- Базовая документация создана
 
 ---
 
-##  Final Note
+## 🚧 Что в процессе
+- Настройка VLAN на HP 1810G-24
+- Установка Zabbix Server и агентов
+- Разработка Bash- и Python-скриптов
+- Подготовка к установке KVM и виртуальных машин
+- Документирование всех процессов
 
-This is not a toy.  
-This is a **career accelerator**.
+---
 
+## 🔗 Дальнейшие шаги
+
+1. Настроить VLAN на HP 1810G-24
+2. Установить Zabbix Server
+3. Запустить первый Ansible-плейбук
+4. Создать бэкапы и проверить восстановление
+5. Развернуть KVM и первую ВМ
+
+Когда это будет сделано — можно будет говорить о Docker, Kubernetes и OpenWRT.  
+**А пока — база. И только база.**
