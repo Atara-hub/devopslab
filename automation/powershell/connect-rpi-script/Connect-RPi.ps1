@@ -1,23 +1,21 @@
 <#
 .SYNOPSIS
-    Finds a device by MAC and opens an SSH session.
-
+    Поиск устройства по MAC и подключение по SSH
 .DESCRIPTION
-    1. Raspberry Pi  (b8-27-eb-87-d4-6b)  -> TopUserServer
-    2. Local server  (3e-8b-7d-09-73-2e)  -> adminserver
+    1. Raspberry Pi  (aa-bb-cc-dd-ee-01)  -> piuser
+    2. Local server  (aa-bb-cc-dd-ee-02)  -> srvuser
     0. Enter MAC manually
-
 .EXAMPLE
     .\Connect-Device.ps1                  # interactive menu
-    .\Connect-Device.ps1 -Mac 3e-8b-7d-09-73-2e -User adminserver
+    .\Connect-Device.ps1 -Mac aa-bb-cc-dd-ee-02 -User srvuser
 #>
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false)]
-    [string]$MacAddress = "b8-27-eb-87-d4-6b",
+    [string]$MacAddress = "aa-bb-cc-dd-ee-01",
 
     [Parameter(Mandatory = $false)]
-    [string]$User = "TopUserServer",
+    [string]$User = "piuser",
 
     [Parameter(Mandatory = $false)]
     [string]$Gateway = "192.168.1.1",
@@ -29,14 +27,12 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-# ------------------------------------------------------------------
-# Device base
-# ------------------------------------------------------------------
+# -------------------------- DEVICE DB ----------------------------
 $DeviceDb = @{
-    "b8-27-eb-87-d4-6b" = "TopUserServer"
-    "3e-8b-7d-09-73-2e" = "adminserver"
+    "aa-bb-cc-dd-ee-01" = "piuser"
+    "aa-bb-cc-dd-ee-02" = "srvuser"
 }
-
+# -------------------------- FUNCTIONS ----------------------------
 function Write-Log {
     param([string]$Text)
     Write-Host ("[{0:yyyy-MM-dd HH:mm:ss}]  {1}" -f (Get-Date), $Text)
@@ -62,40 +58,28 @@ function Invoke-NetworkScan {
     $jobs | Stop-Job -PassThru | Remove-Job -Force
 }
 
-# ------------------------------------------------------------------
-# Interactive device selector (only if MAC not passed explicitly)
-# ------------------------------------------------------------------
-if ($PSBoundParameters.ContainsKey('MacAddress') -and
-    $MacAddress -ne 'b8-27-eb-87-d4-6b') {
-    # MAC передан вручную — пропускаем меню
-}
-else {
-    if (-not $PSBoundParameters.ContainsKey('MacAddress')) {
-        do {
-            Write-Host "`nSelect device:"
-            Write-Host "1. Raspberry Pi  (b8-27-eb-87-d4-6b)"
-            Write-Host "2. Local server  (3e-8b-7d-09-73-2e)"
-            Write-Host "0. Enter MAC manually"
-            $c = Read-Host "Choice (0-2)"
+# -------------------------- INTERACTIVE --------------------------
+if (-not $PSBoundParameters.ContainsKey('MacAddress') -or
+    $MacAddress -eq 'aa-bb-cc-dd-ee-01') {
 
-            $ok = $true
-            switch ($c) {
-                '1' { $MacAddress = 'b8-27-eb-87-d4-6b'; $User = 'TopUserServer' }
-                '2' { $MacAddress = '3e-8b-7d-09-73-2e'; $User = 'adminserver' }
-                '0' {
-                    $MacAddress = Read-Host "MAC (xx-xx-xx-xx-xx-xx)"
-                }
-                default {
-                    Write-Host "Invalid choice" ; $ok = $false
-                }
-            }
-        } while (-not $ok)
-    }
+    do {
+        Write-Host "`nSelect device:"
+        Write-Host "1. Raspberry Pi  (aa-bb-cc-dd-ee-01)"
+        Write-Host "2. Local server  (aa-bb-cc-dd-ee-02)"
+        Write-Host "0. Enter MAC manually"
+        $c = Read-Host "Choice (0-2)"
+
+        $ok = $true
+        switch ($c) {
+            '1' { $MacAddress = 'aa-bb-cc-dd-ee-01'; $User = 'piuser' }
+            '2' { $MacAddress = 'aa-bb-cc-dd-ee-02'; $User = 'srvuser' }
+            '0' { $MacAddress = Read-Host "MAC (xx-xx-xx-xx-xx-xx)" }
+            default { Write-Host "Invalid choice"; $ok = $false }
+        }
+    } while (-not $ok)
 }
 
-# ------------------------------------------------------------------
-# Resolve IP
-# ------------------------------------------------------------------
+# -------------------------- RESOLVE IP ---------------------------
 Write-Log "Updating ARP table"
 Test-Connection $Gateway -Count 2 -Quiet | Out-Null
 
@@ -114,14 +98,11 @@ if (-not $ip) {
         exit 1
     }
     Write-Log "Found after scan: $ip"
-}
-else {
+} else {
     Write-Log "Found: $ip"
 }
 
-# ------------------------------------------------------------------
-# SSH
-# ------------------------------------------------------------------
+# -------------------------- SSH ----------------------------------
 Write-Log "SSH to $User@$ip"
 ssh "$User@$ip"
 Write-Log "SSH session closed"
